@@ -28,8 +28,6 @@ async function main() {
 
 main().catch((error) => {
   console.error("Admin seed failed.");
+  console.error(error);
   process.exitCode = 1;
-  if (process.env.NODE_ENV !== "production") {
-    console.error(error instanceof Error ? error.message : "Unknown error");
-  }
 });
