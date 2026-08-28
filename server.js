@@ -15,6 +15,6 @@ app.prepare().then(() => {
       handle(req, res);
     })
     .listen(port, "0.0.0.0", () => {
-      console.log(`DevSoft running on port ${port}`);
+        console.log(`DevSoft running on port ${port}`);
     });
 });
