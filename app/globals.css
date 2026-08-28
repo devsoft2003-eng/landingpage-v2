@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+:root {
+  --navy-950: #060910;
+  --navy-900: #070b14;
+  --navy-800: #0e1626;
+  --navy-700: #172038;
+  --ice: #d7ecff;
+  --cyan: #5eead4;
+  --cyan-deep: #2dd4bf;
+  --signal: #7dd3fc;
+  --amber: #e8c99a;
+  --mist: #94a3b8;
+  --line: rgba(125, 211, 252, 0.16);
+  --danger: #fb7185;
+  --ok: #34d399;
+  --background: var(--navy-950);
+  --foreground: #e8eef7;
+  --card: rgba(17, 26, 46, 0.72);
+  --radius: 14px;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-navy-950: var(--navy-950);
+  --color-navy-900: var(--navy-900);
+  --color-navy-800: var(--navy-800);
+  --color-navy-700: var(--navy-700);
+  --color-ice: var(--ice);
+  --color-cyan: var(--cyan);
+  --color-cyan-deep: var(--cyan-deep);
+  --color-signal: var(--signal);
+  --color-amber: var(--amber);
+  --color-mist: var(--mist);
+  --color-line: var(--line);
+  --color-danger: var(--danger);
+  --color-ok: var(--ok);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-lg: var(--radius);
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: rgba(45, 212, 191, 0.28);
+  color: white;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan-deep);
+  outline-offset: 3px;
+}
+
+.grid-backdrop {
+  background-image:
+    linear-gradient(rgba(125, 211, 252, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 211, 252, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 78%);
+}
+
+.glass {
+  background: linear-gradient(180deg, rgba(17, 26, 46, 0.82), rgba(10, 16, 32, 0.7));
+  border: 1px solid rgba(125, 211, 252, 0.14);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.section-pad {
+  padding-block: clamp(4rem, 8vw, 7.5rem);
+}
+
+.container-shell {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  font-weight: 600;
+}

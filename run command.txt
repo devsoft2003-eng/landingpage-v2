@@ -1,0 +1,7 @@
+# cp .env.example .env.local #
+copy .env.example .env.local
+# set DATABASE_*, ADMIN_SESSION_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD
+npm install
+npm run db:setup
+npm run db:seed-admin
+npm run dev
