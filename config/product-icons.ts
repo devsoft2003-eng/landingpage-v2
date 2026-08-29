@@ -10,20 +10,17 @@ export const productIcons: Partial<Record<ProductSlug, ProductIconSet>> = {
   tracelens: {
     primary: "/images/products/tracelens-windows.png",
     windows: "/images/products/tracelens-windows.png",
-    android: "/images/products/tracelens-android.png",
   },
   nigrani: {
     primary: "/images/products/nigrani-windows.png",
     windows: "/images/products/nigrani-windows.png",
-    android: "/images/products/nigrani-android.png",
   },
   kartavyanama: {
     primary: "/images/products/kartavyanama-android.png",
-    windows: "/images/products/kartavyanama-windows.png",
     android: "/images/products/kartavyanama-android.png",
   },
   ems: {
     primary: "/images/products/ems-android.png",
-    android: "/images/products/ems-android.png",
+    windows: "/images/products/ems-android.png",
   },
 };

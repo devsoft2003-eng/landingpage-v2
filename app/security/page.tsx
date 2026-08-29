@@ -27,9 +27,8 @@ export default function SecurityPage() {
           </p>
           <h2 className="text-xl font-semibold text-ice">Deployment models</h2>
           <p>
-            Where a product supports it, DevSoft can discuss on-premises and offline operation so sensitive material
-            does not have to leave an agency network. Nigrani, for example, is documented with both web workstation and
-            offline Windows options.
+            Windows products can be planned for local or isolated operation so sensitive material does not have to
+            leave an agency network. KartvyaNama is issued as an Android application.
           </p>
           <h2 className="text-xl font-semibold text-ice">What we collect</h2>
           <p>

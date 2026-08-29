@@ -14,7 +14,7 @@ const services = [
   },
   {
     title: "Mobile application development",
-    text: "Android and iOS applications for field staff who need secure, practical tools away from a desk.",
+    text: "Android applications for field staff who need secure, practical tools away from a desk.",
   },
   {
     title: "Secure environments",

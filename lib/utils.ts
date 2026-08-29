@@ -23,11 +23,22 @@ export function formatDay(value: Date | string): string {
 }
 
 export function getClientIp(headers: Headers): string {
-  const forwarded = headers.get("x-forwarded-for");
-  if (forwarded) {
-    return forwarded.split(",")[0]?.trim() || "unknown";
+  const candidates = [
+    headers.get("cf-connecting-ip"),
+    headers.get("true-client-ip"),
+    headers.get("x-real-ip"),
+    headers.get("x-client-ip"),
+    headers.get("x-forwarded-for")?.split(",")[0],
+  ];
+
+  for (const value of candidates) {
+    const ip = value?.trim();
+    if (ip && ip !== "unknown") {
+      return ip.replace(/^::ffff:/, "").slice(0, 64);
+    }
   }
-  return headers.get("x-real-ip") || "unknown";
+
+  return "unknown";
 }
 
 export function safeFileName(name: string): string {

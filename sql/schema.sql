@@ -111,12 +111,12 @@ CREATE TABLE IF NOT EXISTS `admin_sessions` (
 
 INSERT INTO `products` (`name`, `slug`, `description`, `version`, `platform`, `download_enabled`, `file_path`)
 VALUES
-  ('TraceLens', 'tracelens', 'Digital Evidence & Intelligence Analysis Platform', 'Preview', 'Web / On-premises', 0, NULL),
-  ('Nigrani', 'nigrani', 'IPDR Forensic Analyzer', '1.0.0', 'Web / Windows', 0, NULL),
+  ('TraceLens', 'tracelens', 'Digital Evidence & Intelligence Analysis Platform', 'Preview', 'Windows', 0, NULL),
+  ('Nigrani', 'nigrani', 'IPDR Forensic Analyzer', '1.0.0', 'Windows', 0, NULL),
   ('KartvyaNama', 'kartavyanama', 'Professional Android application', NULL, 'Android', 1, 'kartavyanama.apk'),
-  ('Talash Gateway', 'talash-gateway', 'Secure subscriber information portal', NULL, 'Web', 0, NULL),
-  ('EMS', 'ems', 'Employee management system', NULL, 'Web', 0, NULL),
-  ('Task Master / Tapal', 'task-master', 'Task and correspondence management', NULL, 'Web', 0, NULL)
+  ('Talash Gateway', 'talash-gateway', 'Secure subscriber information system', NULL, 'Windows', 0, NULL),
+  ('EMS', 'ems', 'Employee management system', NULL, 'Windows', 0, NULL),
+  ('Task Master / Tapal', 'task-master', 'Task and correspondence management', NULL, 'Windows', 0, NULL)
 ON DUPLICATE KEY UPDATE
   `name` = VALUES(`name`),
   `description` = VALUES(`description`),

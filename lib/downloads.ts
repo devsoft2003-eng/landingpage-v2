@@ -31,6 +31,7 @@ export interface DownloadRequestRow {
   authorized: number;
   token_expires_at: Date | string;
   created_at: Date | string;
+  ip_address: string;
   download_started: number;
   download_completed: number;
 }
@@ -96,7 +97,7 @@ export async function findAuthorizedRequest(token: string, productSlug: string) 
     `SELECT
         r.id, r.product_id, p.slug AS product_slug, p.name AS product_name,
         r.full_name, r.organization, r.designation, r.email, r.mobile, r.city, r.state, r.country,
-        r.purpose, r.captcha_verified, r.authorized, r.token_expires_at, r.created_at,
+        r.purpose, r.captcha_verified, r.authorized, r.token_expires_at, r.created_at, r.ip_address,
         (SELECT COUNT(*) FROM download_events e WHERE e.download_request_id = r.id AND e.event_type = 'started') AS download_started,
         (SELECT COUNT(*) FROM download_events e WHERE e.download_request_id = r.id AND e.event_type = 'completed') AS download_completed
      FROM download_requests r
@@ -185,9 +186,9 @@ function filterSql(filters: DownloadFilters) {
     params.push(`%${filters.organization}%`);
   }
   if (filters.q) {
-    where.push("(r.full_name LIKE ? OR r.email LIKE ? OR r.organization LIKE ? OR r.mobile LIKE ?)");
+    where.push("(r.full_name LIKE ? OR r.email LIKE ? OR r.organization LIKE ? OR r.mobile LIKE ? OR r.ip_address LIKE ?)");
     const like = `%${filters.q}%`;
-    params.push(like, like, like, like);
+    params.push(like, like, like, like, like);
   }
   return { where: where.length ? `WHERE ${where.join(" AND ")}` : "", params };
 }
@@ -201,13 +202,15 @@ export async function getDownloadStats(filters: DownloadFilters = {}) {
     today: number;
     month: number;
     unique_downloaders: number;
+    unique_ips: number;
   }>(
     `SELECT
       (SELECT COUNT(*) FROM download_requests r INNER JOIN products p ON p.id = r.product_id ${where}) AS total,
       (SELECT COUNT(*) FROM download_requests r INNER JOIN products p ON p.id = r.product_id WHERE r.created_at >= CURDATE() ${andWhere}) AS today,
       (SELECT COUNT(*) FROM download_requests r INNER JOIN products p ON p.id = r.product_id WHERE r.created_at >= DATE_FORMAT(NOW(), '%Y-%m-01') ${andWhere}) AS month,
-      (SELECT COUNT(DISTINCT r.email) FROM download_requests r INNER JOIN products p ON p.id = r.product_id ${where}) AS unique_downloaders`,
-    [...params, ...params, ...params, ...params],
+      (SELECT COUNT(DISTINCT r.email) FROM download_requests r INNER JOIN products p ON p.id = r.product_id ${where}) AS unique_downloaders,
+      (SELECT COUNT(DISTINCT r.ip_address) FROM download_requests r INNER JOIN products p ON p.id = r.product_id ${where}) AS unique_ips`,
+    [...params, ...params, ...params, ...params, ...params],
   );
 
   const byProduct = await query<{ name: string; slug: string; total: number }>(
@@ -264,6 +267,17 @@ export async function getDownloadStats(filters: DownloadFilters = {}) {
     params,
   );
 
+  const byIp = await query<{ ip_address: string; total: number }>(
+    `SELECT r.ip_address, COUNT(*) AS total
+     FROM download_requests r
+     INNER JOIN products p ON p.id = r.product_id
+     ${where}
+     GROUP BY r.ip_address
+     ORDER BY total DESC
+     LIMIT 20`,
+    params,
+  );
+
   const page = Math.max(1, filters.page || 1);
   const pageSize = Math.min(100, Math.max(10, filters.pageSize || 25));
   const offset = (page - 1) * pageSize;
@@ -274,7 +288,7 @@ export async function getDownloadStats(filters: DownloadFilters = {}) {
     `SELECT
         r.id, r.product_id, p.slug AS product_slug, p.name AS product_name,
         r.full_name, r.organization, r.designation, r.email, r.mobile, r.city, r.state, r.country,
-        r.purpose, r.captcha_verified, r.authorized, r.token_expires_at, r.created_at,
+        r.purpose, r.captcha_verified, r.authorized, r.token_expires_at, r.created_at, r.ip_address,
         SUM(e.event_type = 'started') AS started,
         SUM(e.event_type = 'completed') AS completed
      FROM download_requests r
@@ -296,12 +310,13 @@ export async function getDownloadStats(filters: DownloadFilters = {}) {
   );
 
   return {
-    totals: totals ?? { total: 0, today: 0, month: 0, unique_downloaders: 0 },
+    totals: totals ?? { total: 0, today: 0, month: 0, unique_downloaders: 0, unique_ips: 0 },
     byProduct,
     byDay,
     byState,
     byOrg,
     byCity,
+    byIp,
     rows,
     page,
     pageSize,
@@ -315,7 +330,7 @@ export async function exportDownloadRows(filters: DownloadFilters) {
     `SELECT
         r.id, r.product_id, p.slug AS product_slug, p.name AS product_name,
         r.full_name, r.organization, r.designation, r.email, r.mobile, r.city, r.state, r.country,
-        r.purpose, r.captcha_verified, r.authorized, r.token_expires_at, r.created_at,
+        r.purpose, r.captcha_verified, r.authorized, r.token_expires_at, r.created_at, r.ip_address,
         SUM(e.event_type = 'started') AS started,
         SUM(e.event_type = 'completed') AS completed
      FROM download_requests r
