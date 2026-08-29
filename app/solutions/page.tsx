@@ -27,12 +27,12 @@ const items = [
   {
     id: "field-operations",
     title: "Field operations",
-    text: "KartvyaNama is issued as a professional Android application through a registered download. Nigrani also supports offline Windows use for isolated environments.",
+    text: "KartvyaNama is issued as a professional Android application through a registered download.",
   },
   {
     id: "enterprise",
     title: "Secure enterprise operations",
-    text: "Talash Gateway, EMS, and Task Master / Tapal address subscriber information access, workforce administration, and operational task coordination.",
+    text: "Talash Gateway, EMS, and Task Master / Tapal are Windows applications for subscriber information access, workforce administration, and operational task coordination.",
   },
   {
     id: "data-intelligence",

@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const titles: Record<string, string> = {
     tracelens: "TraceLens | Digital Evidence & Intelligence Analysis Platform",
     nigrani: "Nigrani | IPDR Forensic Analyzer",
-    kartavyanama: "KartvyaNama | Android & Windows Application | DevSoft",
+    kartavyanama: "KartvyaNama | Professional Android Application | DevSoft",
   };
   return createMetadata({
     title: titles[product.slug] ?? `${product.name} | DevSoft`,

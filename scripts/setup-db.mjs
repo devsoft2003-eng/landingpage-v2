@@ -2,6 +2,13 @@ import mysql from "mysql2/promise";
 import fs from "node:fs";
 import path from "node:path";
 
+if (typeof process.loadEnvFile === "function") {
+  const envPath = path.resolve(".env.local");
+  if (fs.existsSync(envPath)) {
+    process.loadEnvFile(envPath);
+  }
+}
+
 async function main() {
   const host = process.env.DATABASE_HOST;
   const user = process.env.DATABASE_USER;

@@ -37,7 +37,9 @@ export function getPool(): mysql.Pool {
       timezone: "Z",
       enableKeepAlive: true,
     });
-    
+    pool.on("error", () => {
+      g.__devsoftPool = undefined;
+    });
     g.__devsoftPool = pool;
   }
   return g.__devsoftPool;
