@@ -8,9 +8,11 @@ type GlobalPool = typeof globalThis & {
 
 function required(name: string): string {
   const value = process.env[name];
+
   if (!value) {
     throw new Error("Database is not configured.");
   }
+
   return value;
 }
 
@@ -24,6 +26,7 @@ export function isDatabaseConfigured(): boolean {
 
 export function getPool(): mysql.Pool {
   const g = globalThis as GlobalPool;
+
   if (!g.__devsoftPool) {
     const pool = mysql.createPool({
       host: required("DATABASE_HOST"),
@@ -37,44 +40,56 @@ export function getPool(): mysql.Pool {
       timezone: "Z",
       enableKeepAlive: true,
     });
-    pool.on("error", () => {
-      g.__devsoftPool = undefined;
-    });
+
     g.__devsoftPool = pool;
   }
+
   return g.__devsoftPool;
 }
 
 export function resetPool() {
   const g = globalThis as GlobalPool;
+
   if (g.__devsoftPool) {
     g.__devsoftPool.end().catch(() => undefined);
     g.__devsoftPool = undefined;
   }
 }
 
-export async function query<T>(sql: string, params: SqlParam[] = []): Promise<T[]> {
+export async function query<T>(
+  sql: string,
+  params: SqlParam[] = [],
+): Promise<T[]> {
   try {
     const [rows] = await getPool().execute(sql, params);
     return rows as T[];
   } catch {
     resetPool();
+
     const [rows] = await getPool().execute(sql, params);
     return rows as T[];
   }
 }
 
-export async function queryOne<T>(sql: string, params: SqlParam[] = []): Promise<T | null> {
+export async function queryOne<T>(
+  sql: string,
+  params: SqlParam[] = [],
+): Promise<T | null> {
   const rows = await query<T>(sql, params);
   return rows[0] ?? null;
 }
 
-export async function insert(sql: string, params: SqlParam[] = []): Promise<number> {
+export async function insert(
+  sql: string,
+  params: SqlParam[] = [],
+): Promise<number> {
   const run = async () => {
     const [result] = await getPool().execute(sql, params);
     const header = result as mysql.ResultSetHeader;
+
     return Number(header.insertId);
   };
+
   try {
     return await run();
   } catch {
@@ -82,4 +97,3 @@ export async function insert(sql: string, params: SqlParam[] = []): Promise<numb
     return run();
   }
 }
-
